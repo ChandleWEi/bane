@@ -12,11 +12,11 @@ module Bane
     end
 
     def serve(io)
-      @behavior.serve(io)
+      behavior.serve(io)
     end
 
     def to_s
-      "<Bane::BehaviorServer: port=#{@port}, behavior=#{@behavior.class}>"
+      "<Bane::BehaviorServer: port=#{port}, behavior=#{behavior.class}>"
     end
     
     protected
@@ -24,7 +24,7 @@ module Bane
     alias_method :original_log, :log
 
     def log(message)
-      original_log("#{@behavior.class.simple_name} #{@host}:#{@port} #{message}")
+      original_log("#{behavior.class.simple_name} #{host}:#{port} #{message}")
     end
 
     def connecting(client)
@@ -43,5 +43,10 @@ module Bane
     def stopping()
       log("stop")
     end
+
+    private
+
+    attr_reader :behavior
+
   end
 end

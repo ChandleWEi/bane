@@ -8,16 +8,20 @@ module Bane
     end
 
     def start
-      @servers.each { |server| server.start }
+      servers.each { |server| server.start }
     end
 
     def join
-      @servers.each { |server| server.join }
+      servers.each { |server| server.join }
     end
 
     def stop
-      @servers.each { |server| server.stop }
+      servers.each { |server| server.stop }
     end
+
+    private
+
+    attr_reader :servers
 
   end
   

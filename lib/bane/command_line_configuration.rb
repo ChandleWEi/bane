@@ -9,7 +9,7 @@ module Bane
     end
 
     def parse(args)
-      parse_options(@options, args)
+      parse_options(options, args)
 
       return [] if (args.empty?)
 
@@ -17,14 +17,16 @@ module Bane
       behaviors = parse_behaviors(args.drop(1))
 
       behaviors = ServiceRegistry.all_servers if behaviors.empty?
-      @configuration_factory.create(port, behaviors, @options[:host])
+      configuration_factory.create(port, behaviors, options[:host])
     end
 
     def usage
-      @option_parser.help
+      option_parser.help
     end
 
     private 
+
+    attr_reader :options, :configuration_factory, :option_parser
 
     def init_option_parser
       OptionParser.new do |opts|
@@ -32,10 +34,10 @@ module Bane
         opts.separator ""
         opts.on("-l", "--listen-on-localhost",
           "Listen on localhost, (#{BehaviorServer::DEFAULT_HOST}). [default]") do
-          @options[:host] = BehaviorServer::DEFAULT_HOST
+          options[:host] = BehaviorServer::DEFAULT_HOST
         end
         opts.on("-a", "--listen-on-all-hosts", "Listen on all interfaces, (#{BehaviorServer::ALL_INTERFACES})") do
-          @options[:host] = BehaviorServer::ALL_INTERFACES
+          options[:host] = BehaviorServer::ALL_INTERFACES
         end
         opts.separator ""
         opts.separator "All behaviors:"        
@@ -45,7 +47,7 @@ module Bane
     end
 
     def parse_options(options, args)
-      @option_parser.parse!(args)
+      option_parser.parse!(args)
       rescue OptionParser::InvalidOption => io
         raise ConfigurationError, io.message
     end

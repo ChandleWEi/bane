@@ -8,8 +8,12 @@ class NaiveHttpResponse
     end
 
     def to_s
-      @headers.map { |k, v| "#{k}: #{v}" }.join(CRLF)
+      headers.map { |k, v| "#{k}: #{v}" }.join(CRLF)
     end
+
+    private
+
+    attr_reader :headers
 
   end
 
@@ -22,22 +26,24 @@ class NaiveHttpResponse
 
   def to_s
     str = []
-    str << "HTTP/1.1 #{@code} #{@description}"
+    str << "HTTP/1.1 #{code} #{description}"
     str << http_header.to_s
     str << ""
-    str << @body
+    str << body
     str.join(CRLF)
   end
 
   private
+
+  attr_reader :code, :description, :content_type, :body
 
   def http_header()
     HttpHeader.new(
             {"Server" => "Bane HTTP Server",
              "Connection" => "close",
              "Date" => http_date(Time.now),
-             "Content-Type" => @content_type,
-             "Content-Length" => @body.length})
+             "Content-Type" => content_type,
+             "Content-Length" => body.length})
   end
 
   def http_date(time)
